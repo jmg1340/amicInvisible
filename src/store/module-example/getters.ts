@@ -3,8 +3,12 @@ import { StateInterface } from '../index';
 import { ExampleStateInterface } from './state';
 
 const getters: GetterTree<ExampleStateInterface, StateInterface> = {
-  someAction (/* context */) {
-    // your code
+  getParticipantsGrup (context) {
+    console.log("--- GET PARTICIPANTS GRUP ----")
+		return (nomGrup: string) => {
+			console.log("getParticipantsGrup - nomGrup: " + nomGrup);
+			return "retorn del getter getParticipantsGrup"
+		}
   }
 };
 

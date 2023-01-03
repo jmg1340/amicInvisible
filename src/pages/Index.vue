@@ -21,8 +21,12 @@
 <script lang="ts">
 import { Participant, Participants } from 'components/models';
 import { defineComponent, ref, computed } from 'vue';
+
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';
+
+import { useStore } from 'vuex'
+import { storeKey } from '../store/index'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -30,36 +34,14 @@ export default defineComponent({
   setup() {
 		const $q = useQuasar()
 		const router = useRouter();
+		const store = useStore(storeKey)
 
 		const nouGrup = ""
-
-		const participants: Participants = [
-			{
-				nom: "jordi",
-				email: "jordi.miserachs@gmail.com",
-				grup: "familia Jordi"
-			},
-			{
-				nom: "Mariona",
-				email: "exempleMariona@gmail.com",
-				grup: "familia Jordi"
-			},
-			{
-				nom: "Rosa M.",
-				email: "exempleRosaM@gmail.com",
-				grup: "familia Jordi"
-			},
-			{
-				nom: "Ricard",
-				email: "exempleRicard@gmail.com",
-				grup: "familia Ana"
-			},
-		]
-
+		const participants = store.state.example.participants
 
 		const grupsParticipants = computed( () => {
 			let grups:string[] = []
-			participants.forEach( (participant: Participant, index: number, arr: Participant[] ) => {
+			participants.forEach( (participant ) => {
 
 				const elementCoincident = grups.some( elem => participant.grup == elem )
 				if ( ! elementCoincident ) grups.push(participant.grup)

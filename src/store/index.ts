@@ -6,8 +6,8 @@ import {
   useStore as vuexUseStore,
 } from 'vuex'
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+import example from './module-example'
+import { ExampleStateInterface } from './module-example/state';
 
 /*
  * If not building with SSR mode, you can
@@ -19,10 +19,11 @@ import {
  */
 
 export interface StateInterface {
+  [x: string]: any;
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown
+  example: ExampleStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -38,7 +39,7 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
-      // example
+      example
     },
 
     // enable strict mode (adds overhead!)

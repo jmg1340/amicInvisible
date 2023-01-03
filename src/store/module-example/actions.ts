@@ -3,8 +3,12 @@ import { StateInterface } from '../index';
 import { ExampleStateInterface } from './state';
 
 const actions: ActionTree<ExampleStateInterface, StateInterface> = {
-  someAction (/* context */) {
-    // your code
+  guardarDadesParticipant (context, payload) {
+    console.log("payload", payload)
+
+		if (payload.mode === "editar") {
+			
+		}
   }
 };
 
