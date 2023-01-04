@@ -2,6 +2,9 @@
 	
 	<q-card class="q-ma-lg">
 		<q-card-section>
+			{{ nomGrup }}
+		</q-card-section>
+		<q-card-section>
 			<q-form
 				@submit="onSubmit"
 				@reset="onReset"
@@ -43,7 +46,7 @@
 
 <script lang="ts">
 import { Ref, ref, defineComponent, onMounted  } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { useStore } from 'vuex'
 import { storeKey } from '../store/index'
@@ -58,12 +61,17 @@ export default defineComponent({
 	setup() {
 
 		const route = useRoute();
+		const router = useRouter();
+
 		const store = useStore(storeKey)
 
+		const id: Ref<any> = ref(null)
 		const nom: Ref<any> = ref("")
 		const email: Ref<any> = ref("")
 
-		const grup = route.query.nomGrup
+		const idGrup = route.query.idGrup
+		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === idGrup ))?.nom
+
 
 		onMounted(() => {
 			if ( route.query.mode === "editar" ){
@@ -76,10 +84,14 @@ export default defineComponent({
 			console.log("onSubmit apretat")
 			store.dispatch( "example/guardarDadesParticipant", {
 				mode: route.query.mode, 
-				grup: route.query.nomGrup,
+				id: route.query.id,
+				idGrup: idGrup,
 				nom: nom.value, 
 				email: email.value
 				} )
+
+
+			router.push(`/grup/${idGrup}`)
 
 
 		}
@@ -95,7 +107,7 @@ export default defineComponent({
 		// 	}
 		// )
 
-		return { grup, nom, email, onSubmit, onReset}
+		return { nomGrup, nom, email, onSubmit, onReset}
 	},
 })
 </script>

@@ -3,13 +3,20 @@
 
 		<div class="col-6">
 
-			<q-btn label="Nou grup" noCaps color="negative" class="q-mb-lg" @click="prompt"/>
+			<q-btn label="Nou grup" noCaps color="negative" class="q-mb-lg" @click="prompt('afegir', 0, '')"/>
 
-			<q-list bordered separator v-for="nom_grup in grupsParticipants" :key="nom_grup" >
-				<q-item clickable v-ripple @click="mostrarGrup(nom_grup)">
-					<q-item-section>
-						{{ nom_grup }}
+			<q-list bordered separator v-for="obj in grupsParticipants" :key="obj.id" >
+				<q-item>
+					<q-item-section clickable v-ripple @click="mostrarGrup(obj.id)">
+						{{ obj.nom }}
 					</q-item-section>
+					<q-item-section top side>
+						<div class="q-gutter-xs">
+							<q-btn flat dense round color="danger" icon="edit" @click="prompt('editar', obj.id, obj.nom)"/>
+							<q-btn flat dense round color="negative" icon="delete" @click="EliminarGrup(obj.id)"/>
+						</div>
+					</q-item-section>
+					
 				</q-item>
 			</q-list>
 
@@ -36,34 +43,43 @@ export default defineComponent({
 		const router = useRouter();
 		const store = useStore(storeKey)
 
-		const nouGrup = ""
-		const participants = store.state.example.participants
-
-		const grupsParticipants = computed( () => {
-			let grups:string[] = []
-			participants.forEach( (participant ) => {
-
-				const elementCoincident = grups.some( elem => participant.grup == elem )
-				if ( ! elementCoincident ) grups.push(participant.grup)
-			})
-
-			// console.log("grups", grups)
-			return grups
-		})
+		let nomGrup: string = ""
+		const grupsParticipants = store.state.example.grups
 
 
-    function prompt () {
+    function prompt (mode: string, idGrup: number, nom: string) {
+			console.log("MODE", mode, "IDGRUP", idGrup, "NOM", nom)
+			
+			
+
+			if (mode === "afegir")
+
       $q.dialog({
-        title: 'NOU GRUP',
-        message: 'Nom del nou grup:',
+        title: `${ (mode === "afegir") ? "Nou grup" : "Modificar nom del grup"} `,
+        message: 'Nom del grup:',
         prompt: {
-          model: nouGrup,
+          model: nomGrup,
           type: 'text' // optional
         },
         cancel: true,
         persistent: true
       }).onOk(data => {
-        // console.log('>>>> OK, received', data)
+
+        console.log('>>>> OK, received', data)
+				if (data.trim().length > 0) {
+
+					if (mode === "afegir")
+						idGrup = Math.max( ...store.state.example.grups.map( g => g.id ) ) + 1
+
+
+					store.commit("example/guardarGrup", {
+						idGrup: idGrup,
+						nom: data.trim()
+					})
+				}
+
+
+
       }).onCancel(() => {
         // console.log('>>>> Cancel')
       }).onDismiss(() => {
@@ -72,9 +88,9 @@ export default defineComponent({
     }
 
 
-		const mostrarGrup = (nom: string) => {
+		const mostrarGrup = (idGrup: number) => {
 			// console.log("parametre", router.push)
-			router.push(`/grup/${nom}`)
+			router.push(`/grup/${idGrup}`)
 		}
 
 
@@ -82,7 +98,7 @@ export default defineComponent({
 
 
 
-    return { grupsParticipants, prompt, nouGrup, mostrarGrup };
+    return { grupsParticipants, prompt, nomGrup, mostrarGrup };
   }
 });
 </script>

@@ -1,17 +1,17 @@
-export interface Todo {
+
+export interface Grup {
   id: number;
-  content: string;
+	nom: string;
 }
 
-export interface Meta {
-  totalCount: number;
-}
+export interface Grups extends Array<Grup>{}
 
 
 export interface Participant {
+	id: number;
+	idGrup: number;
 	nom: string;
 	email: string;
-	grup: string;
 }
 
 export interface Participants extends Array<Participant>{}

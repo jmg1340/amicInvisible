@@ -3,7 +3,7 @@
 		<div class="col-6">
 
 			<div class="row justify-between">
-				<div class="text-h5">GRUP: <span class="text-grey-8">{{ nomGrup }} </span></div>
+				<div class="text-h5">Grup: <span class="text-grey-8">{{ nomGrup }} </span></div>
 				<q-btn dense label="Afegir" class="q-mb-md bg-primary text-white" noCaps @click="afegirParticipant"/>
 			</div>
 			
@@ -15,7 +15,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(participant, index) in participantsGrup" :key="index" @click="editarParticipant(participant.nom, participant.email)">
+					<tr v-for="(participant, index) in participantsGrup" :key="index" @click="editarParticipant(participant.id, participant.nom, participant.email)">
 						<participant-dades :participant="participant" />
 					</tr>
 				</tbody>
@@ -47,7 +47,7 @@ export default defineComponent ({
     //   type: Array as PropType<Participants[]>,
     //   default: () => []			
 		// },
-		nomGrup: {
+		idGrup: {
 			type: String,
 			required: true
 		}
@@ -59,26 +59,24 @@ export default defineComponent ({
 
 		const store = useStore(storeKey)		
 
-		// ------------------
-		const xx = computed( () => store.getters.example.getParticipantsGrup( props.nomGrup ) )
-		console.log("xx", xx)
-		// ------------------
-		
+		const grupId = parseInt(props.idGrup)
+		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === grupId ))?.nom
 
 		const participants = store.state.example.participants
-		const participantsGrup = computed(() => participants.filter( (p) => p.grup === props.nomGrup)).value
+		const participantsGrup = computed(() => participants.filter( (p) => p.idGrup === grupId)).value
 		
 
 		const afegirParticipant = () => { 
 			router.push({ name: "afegirEditarParticipant", query: { 
-				nomGrup: props.nomGrup, 
+				idGrup: grupId, 
 				mode: "afegir" 
 				} });
 		}
 
-		const editarParticipant = (nom: string, email: string) => { 
+		const editarParticipant = (id: number, nom: string, email: string) => { 
 			router.push({ name: "afegirEditarParticipant", query: { 
-				nomGrup: props.nomGrup,
+				id: id,
+				idGrup: grupId,
 				nom: nom, 
 				email: email,
 				mode: "editar" } });
@@ -92,7 +90,7 @@ export default defineComponent ({
 
 
 
-		return { participantsGrup, afegirParticipant, editarParticipant }
+		return { nomGrup, participantsGrup, afegirParticipant, editarParticipant }
 	}
 
 

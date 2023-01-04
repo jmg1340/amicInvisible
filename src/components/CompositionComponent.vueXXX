@@ -1,5 +1,8 @@
+
+
 <template>
   <div>
+<!--  
     <p>{{ title }}</p>
     <ul>
       <li v-for="todo in todos" :key="todo.id" @click="increment">
@@ -9,10 +12,13 @@
     <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
     <p>Active: {{ active ? 'yes' : 'no' }}</p>
     <p>Clicks on todos: {{ clickCount }}</p>
+-->
   </div>
 </template>
 
 <script lang="ts">
+/*
+
 import {
   defineComponent,
   PropType,
@@ -61,4 +67,7 @@ export default defineComponent({
     return { ...useClickCount(), ...useDisplayTodo(toRef(props, 'todos')) };
   },
 });
+
+
+*/
 </script>
