@@ -3,7 +3,7 @@
 
 		<div class="col-6">
 
-			<q-btn label="Nou grup" noCaps color="negative" class="q-mb-lg" @click="prompt('afegir', 0, '')"/>
+			<q-btn label="Nou grup" noCaps color="negative" class="q-mb-lg" @click="afegirModificarGrup('afegir', 0, '')"/>
 
 			<q-list bordered separator v-for="obj in grupsParticipants" :key="obj.id" >
 				<q-item>
@@ -12,8 +12,8 @@
 					</q-item-section>
 					<q-item-section top side>
 						<div class="q-gutter-xs">
-							<q-btn flat dense round color="danger" icon="edit" @click="prompt('editar', obj.id, obj.nom)"/>
-							<q-btn flat dense round color="negative" icon="delete" @click="EliminarGrup(obj.id)"/>
+							<q-btn flat dense round color="orange" icon="edit" @click="afegirModificarGrup('editar', obj.id, obj.nom)"/>
+							<q-btn flat dense round color="negative" icon="delete" @click="eliminarGrup(obj.id, obj.nom)"/>
 						</div>
 					</q-item-section>
 					
@@ -43,29 +43,61 @@ export default defineComponent({
 		const router = useRouter();
 		const store = useStore(storeKey)
 
-		let nomGrup: string = ""
-		const grupsParticipants = store.state.example.grups
+		const grupsParticipants = computed( () => store.state.example.grups )
 
 
-    function prompt (mode: string, idGrup: number, nom: string) {
-			console.log("MODE", mode, "IDGRUP", idGrup, "NOM", nom)
-			
-			
-
-			if (mode === "afegir")
-
+    function eliminarGrup (id:number, nom: string) {
       $q.dialog({
-        title: `${ (mode === "afegir") ? "Nou grup" : "Modificar nom del grup"} `,
-        message: 'Nom del grup:',
-        prompt: {
-          model: nomGrup,
-          type: 'text' // optional
+        title: 'Confirmar',
+        message: `També s'eliminaran els participants del grup "${nom.toUpperCase()}".Ok?`,
+        ok: {
+          push: true,
+					color: "positive",
+					label: "Sí"
         },
-        cancel: true,
+        cancel: {
+          push: true,
+          color: 'negative',
+					label: "No"
+        },
         persistent: true
-      }).onOk(data => {
+      }).onOk(() => {
+        // Hem d'eliminar el grup i els participants del grup
+				store.commit("example/eliminarParticipantsGrup", { idGrup: id })
+				store.commit("example/eliminarGrup", { idGrup: id })
 
-        console.log('>>>> OK, received', data)
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
+
+
+
+
+
+		let nomGrup: string = ""
+
+    function afegirModificarGrup (mode: string, idGrup: number, nom: string) {
+			// console.log("MODE", mode, "IDGRUP", idGrup, "NOM", nom)
+
+			nomGrup = (mode === "editar") ? nom : ""
+
+			$q.dialog({
+				title: `${ (mode === "afegir") ? "Nou grup" : "Modificar nom del grup"} `,
+				message: 'Nom del grup:',
+				prompt: {
+					model: nomGrup,
+					type: 'text' // optional
+				},
+				cancel: true,
+				persistent: true
+			}).onOk(data => {
+
+				console.log('>>>> OK, received', data)
 				if (data.trim().length > 0) {
 
 					if (mode === "afegir")
@@ -78,13 +110,12 @@ export default defineComponent({
 					})
 				}
 
+			}).onCancel(() => {
+				// console.log('>>>> Cancel')
+			}).onDismiss(() => {
+				// console.log('I am triggered on both OK and Cancel')
+			})
 
-
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
-      })
     }
 
 
@@ -98,7 +129,7 @@ export default defineComponent({
 
 
 
-    return { grupsParticipants, prompt, nomGrup, mostrarGrup };
+    return { grupsParticipants, afegirModificarGrup, eliminarGrup, nomGrup, mostrarGrup };
   }
 });
 </script>

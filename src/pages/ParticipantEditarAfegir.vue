@@ -7,7 +7,7 @@
 		<q-card-section>
 			<q-form
 				@submit="onSubmit"
-				@reset="onReset"
+				
 				class="q-gutter-md"
 			>
 				<q-input
@@ -31,9 +31,18 @@
 					]"
 				/>
 
+
+
+
+				<div>
+					EXCECPIONS
+				</div>
+				<excepcions :idGrup="idGrup" :idPart="id" @onChangeArrExcepcions="alCanviarArrExcepcions"/>
+
+
 				<div class="row justify-between">
-					<q-btn class="col-auto" label="Guardar" type="submit" color="primary"/>
-					<q-btn class="col-auto" label="Reset" type="reset" color="primary" flat  />
+					<q-btn class="col-auto" label="Guardar" type="submit" color="positive"/>
+					<q-btn class="col-auto" label="Cancelar" color="negative"  @click="onCancelar()"/>
 				</div>
 			</q-form>
 		</q-card-section>
@@ -51,12 +60,10 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import { storeKey } from '../store/index'
 
+import excepcions from '../components/Excepcions.vue'
+
 export default defineComponent({
-	// props: {
-	// 	objAfegirEditar: {
-	// 		type: Object
-	// 	}
-	// },
+	components: { excepcions },
 
 	setup() {
 
@@ -65,13 +72,13 @@ export default defineComponent({
 
 		const store = useStore(storeKey)
 
-		const id: Ref<any> = ref(null)
+		const id = route.query.id
+		const idGrup = route.query.idGrup
 		const nom: Ref<any> = ref("")
 		const email: Ref<any> = ref("")
-
-		const idGrup = route.query.idGrup
+	
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === idGrup ))?.nom
-
+		let arrExcepcions = (store.state.example.participants.find( (p: any) => p.id === id ))?.excepcions
 
 		onMounted(() => {
 			if ( route.query.mode === "editar" ){
@@ -81,23 +88,22 @@ export default defineComponent({
 		})
 
 		const onSubmit = () => {
-			console.log("onSubmit apretat")
+			console.log("onSubmit apretat. idGrup:", idGrup)
 			store.dispatch( "example/guardarDadesParticipant", {
 				mode: route.query.mode, 
 				id: route.query.id,
 				idGrup: idGrup,
 				nom: nom.value, 
-				email: email.value
+				email: email.value,
+				excepcions: arrExcepcions
 				} )
 
-
 			router.push(`/grup/${idGrup}`)
-
-
 		}
 
-		const onReset = () => {
+		const onCancelar = () => {
 			console.log("onReset apretat")
+			router.push(`/grup/${idGrup}`)
 		}
 
 		// watch(
@@ -107,7 +113,12 @@ export default defineComponent({
 		// 	}
 		// )
 
-		return { nomGrup, nom, email, onSubmit, onReset}
-	},
+		const alCanviarArrExcepcions = (nouArrE: any) => {
+			arrExcepcions = nouArrE
+			console.log("nouArrE", arrExcepcions)
+		}
+
+		return { nomGrup, nom, id, idGrup, email, onSubmit, onCancelar, alCanviarArrExcepcions}
+	}
 })
 </script>

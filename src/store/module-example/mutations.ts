@@ -3,7 +3,23 @@ import { ExampleStateInterface } from './state';
 
 const mutation: MutationTree<ExampleStateInterface> = {
 
-	
+
+	eliminarParticipant (state: ExampleStateInterface, payload) {
+		// ... busquem les dades (objecte) segons el id
+		state.participants = state.participants.filter( p => p.id !== parseInt(payload.idParticipant))
+	},
+
+	eliminarParticipantsGrup (state: ExampleStateInterface, payload) {
+		// ... busquem les dades (objecte) segons el id
+		state.participants = state.participants.filter( p => p.idGrup !== parseInt(payload.idGrup))
+	},
+
+	eliminarGrup (state: ExampleStateInterface, payload) {
+		// ... busquem les dades (objecte) segons el id
+		state.grups = state.grups.filter( g => g.id !== parseInt(payload.idGrup))
+	},
+
+
 	guardarGrup (state: ExampleStateInterface, payload) {
 		// ... busquem les dades (objecte) segons el id
 		const obj = state.grups.find( (g) => g.id === parseInt(payload.idGrup))
@@ -37,6 +53,7 @@ const mutation: MutationTree<ExampleStateInterface> = {
 			obj.idGrup = payload.idGrup;
 			obj.nom = payload.nom;
 			obj.email = payload.email;
+			obj.excepcions = payload.excepcions;
 		} else {
 			// ... afegim nou participant
 			console.log("Participant NO TROBAT. Es tracta d'un nou participant")
@@ -44,7 +61,8 @@ const mutation: MutationTree<ExampleStateInterface> = {
 				id : payload.id,
 				idGrup : payload.idGrup,
 				nom : payload.nom,
-				email : payload.email	
+				email : payload.email,
+				excepcions: payload.excepcions
 			})
 		}
 

@@ -12,6 +12,7 @@ export interface Participant {
 	idGrup: number;
 	nom: string;
 	email: string;
+	excepcions: number[]
 }
 
 export interface Participants extends Array<Participant>{}

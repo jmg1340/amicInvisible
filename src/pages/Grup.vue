@@ -1,26 +1,28 @@
 <template>
-	<div class="row items-center justify-center q-pa-lg">
-		<div class="col-6">
+	<div class="row  justify-center q-ma-lg">
+		<q-card class="col">
+			<q-card-section>
 
-			<div class="row justify-between">
-				<div class="text-h5">Grup: <span class="text-grey-8">{{ nomGrup }} </span></div>
-				<q-btn dense label="Afegir" class="q-mb-md bg-primary text-white" noCaps @click="afegirParticipant"/>
-			</div>
-			
-			<q-markup-table separator="cell" dense>
-				<thead class="text-white bg-grey-8">
-					<tr>
-						<th>Nom</th>
-						<th>Email</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="(participant, index) in participantsGrup" :key="index" @click="editarParticipant(participant.id, participant.nom, participant.email)">
-						<participant-dades :participant="participant" />
-					</tr>
-				</tbody>
-			</q-markup-table>
-		</div>
+				<div class="row justify-between">
+					<div class="text-h5">Grup: <span class="text-grey-8">{{ nomGrup }} </span></div>
+					<q-btn dense label="Afegir" class="q-mb-md bg-primary text-white" noCaps @click="afegirParticipant"/>
+				</div>
+				
+				<div class="row text-white bg-grey-8">
+
+							<div class="col q-pa-xs">Nom</div>
+							<div class="col q-pa-xs">Email</div>
+							<div class="col q-pa-xs"></div>
+
+				</div>
+
+				<div class="row items-center pintaRecuadre" v-for="(participant, index) in participantsGrup" :key="index" >
+					<participant-dades :participant="participant"/>
+				</div>
+
+
+			</q-card-section>
+		</q-card>
 	</div>
 
 </template>
@@ -40,7 +42,7 @@ import { storeKey } from '../store/index'
 export default defineComponent ({
 
 	name: "Grup",
-	components: { ParticipantDades, ParticipantEditarAfegir },
+	components: { ParticipantDades },
 
 	props: {
 		// participants: {
@@ -62,8 +64,8 @@ export default defineComponent ({
 		const grupId = parseInt(props.idGrup)
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === grupId ))?.nom
 
-		const participants = store.state.example.participants
-		const participantsGrup = computed(() => participants.filter( (p) => p.idGrup === grupId)).value
+		// const participants = store.state.example.participants
+		const participantsGrup = computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId))
 		
 
 		const afegirParticipant = () => { 
@@ -73,24 +75,9 @@ export default defineComponent ({
 				} });
 		}
 
-		const editarParticipant = (id: number, nom: string, email: string) => { 
-			router.push({ name: "afegirEditarParticipant", query: { 
-				id: id,
-				idGrup: grupId,
-				nom: nom, 
-				email: email,
-				mode: "editar" } });
-		}
 
 
-
-
-
-
-
-
-
-		return { nomGrup, participantsGrup, afegirParticipant, editarParticipant }
+		return { nomGrup, participantsGrup, afegirParticipant }
 	}
 
 
@@ -101,6 +88,10 @@ export default defineComponent ({
 
 
 
-<style scoped>
-
+<style scoped lang="css">
+	.pintaRecuadre {
+		border-left: 1px solid grey;
+		border-bottom: 1px solid grey;
+		border-right: 1px solid grey;
+	}
 </style>
