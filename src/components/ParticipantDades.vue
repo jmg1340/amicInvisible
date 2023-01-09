@@ -1,6 +1,13 @@
 <template>
 	
-		<div class="col q-pa-xs">{{ participant.nom }}</div>
+		<div class="col q-pa-xs">
+			{{ participant.nom }}
+			<q-badge 
+			v-if="participant.excepcions.length !== 0"
+			align="top" 
+			rounded
+			color="red">{{ participant.excepcions.length }}</q-badge>
+		</div>
 		<div class="col q-pa-xs">{{ participant.email }}</div>
 		<div class="col">
 			<div class="row justify-end q-gutter-xs">

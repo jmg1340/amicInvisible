@@ -72,13 +72,18 @@ export default defineComponent({
 
 		const store = useStore(storeKey)
 
-		const id = route.query.id
+		const id2: string = (route.query.id)
+		const id: number = parseInt(id2)
 		const idGrup = route.query.idGrup
 		const nom: Ref<any> = ref("")
 		const email: Ref<any> = ref("")
 	
+		console.log("typeof(id)", typeof(id))
+		console.log("typeof(idGrup)", typeof(idGrup))
+
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === idGrup ))?.nom
 		let arrExcepcions = (store.state.example.participants.find( (p: any) => p.id === id ))?.excepcions
+		console.log("GRUP arrExcepcions:", arrExcepcions)
 
 		onMounted(() => {
 			if ( route.query.mode === "editar" ){
@@ -88,7 +93,10 @@ export default defineComponent({
 		})
 
 		const onSubmit = () => {
-			console.log("onSubmit apretat. idGrup:", idGrup)
+			console.log("onSubmit apretat. arrExcepcions:", arrExcepcions)
+			
+			if (! arrExcepcions ) (store.state.example.participants.find( (p: any) => p.id === id ))?.excepcions
+
 			store.dispatch( "example/guardarDadesParticipant", {
 				mode: route.query.mode, 
 				id: route.query.id,
@@ -102,7 +110,7 @@ export default defineComponent({
 		}
 
 		const onCancelar = () => {
-			console.log("onReset apretat")
+			// console.log("onReset apretat")
 			router.push(`/grup/${idGrup}`)
 		}
 
@@ -115,10 +123,10 @@ export default defineComponent({
 
 		const alCanviarArrExcepcions = (nouArrE: any) => {
 			arrExcepcions = nouArrE
-			console.log("nouArrE", arrExcepcions)
+			// console.log("nouArrE", arrExcepcions)
 		}
 
-		return { nomGrup, nom, id, idGrup, email, onSubmit, onCancelar, alCanviarArrExcepcions}
+		return { nomGrup, nom, id, idGrup, email, onSubmit, onCancelar, alCanviarArrExcepcions, arrExcepcions}
 	}
 })
 </script>

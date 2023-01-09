@@ -1,14 +1,14 @@
 import { Grups, Participants } from "../../components/models"
 
 export interface ExampleStateInterface {
-  prop: boolean;
+  // prop: boolean;
 	participants: Participants;
 	grups: Grups;
 }
 
 function state(): ExampleStateInterface {
 	return {
-		prop: false,
+		// prop: false,
 
 		grups: [
 			{ id: 1, nom: "FAMILIA JORDI"},

@@ -21,7 +21,8 @@ const actions: ActionTree<ExampleStateInterface, StateInterface> = {
 				id: idAEnviar,
 				idGrup: parseInt(payload.idGrup),
 				nom: payload.nom,
-				email: payload.email
+				email: payload.email,
+				excepcions: payload.excepcions
 		}, 
 		{ 
 			root: true 

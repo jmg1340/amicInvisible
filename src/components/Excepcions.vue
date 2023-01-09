@@ -18,16 +18,16 @@
           <q-checkbox v-model="arrExcepcions" :val="p.id" color="black" />  
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{ p.nom }} - {{ p.id }} </q-item-label>
+          <q-item-label>{{ p.nom }} </q-item-label>
         </q-item-section>
       </q-item>
 
 
 		</q-list> 
 
-		<div>
+		<!-- <div>
 			Seleccio: {{ arrExcepcions }}
-		</div>
+		</div> -->
 
 	</div>
 </template>
@@ -60,8 +60,8 @@ export default defineComponent({
 		)
 
 		watch(() => arrExcepcions.value, (currentValue, oldValue) => {
-			console.log("currentValue", currentValue);
-			console.log("oldValue", oldValue);
+			// console.log("currentValue", currentValue);
+			// console.log("oldValue", oldValue);
 			ctx.emit("onChangeArrExcepcions", currentValue)
 		});
 

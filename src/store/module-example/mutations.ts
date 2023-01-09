@@ -3,6 +3,10 @@ import { ExampleStateInterface } from './state';
 
 const mutation: MutationTree<ExampleStateInterface> = {
 
+	carregarDadesDeLocalStorage (state: ExampleStateInterface, payload) {
+		state.grups = payload.grups;
+		state.participants = payload.participants;
+	},
 
 	eliminarParticipant (state: ExampleStateInterface, payload) {
 		// ... busquem les dades (objecte) segons el id
@@ -41,7 +45,7 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
 
   guardarParticipant (state: ExampleStateInterface, payload) {
-		console.log("payload", payload)
+		// console.log("payload", payload)
 		
 		// ... busquem les dades (objecte) segons el id
 		const obj = state.participants.find( (p) => p.id === parseInt(payload.id))
