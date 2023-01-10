@@ -1,7 +1,8 @@
-import { Grups, Participants } from "../../components/models"
+import { Configuracio, Grups, Participants } from "../../components/models"
 
 export interface ExampleStateInterface {
   // prop: boolean;
+	configuracio: Configuracio;
 	participants: Participants;
 	grups: Grups;
 }
@@ -10,6 +11,13 @@ function state(): ExampleStateInterface {
 	return {
 		// prop: false,
 
+		configuracio: {
+			servidor: "",
+			port: "",
+			usuari: "",
+			pwd: ""
+		},
+		
 		grups: [
 			{ id: 1, nom: "FAMILIA JORDI"},
 			{ id: 2, nom: "FAMILIA ANA"}

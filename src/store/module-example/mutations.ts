@@ -70,7 +70,15 @@ const mutation: MutationTree<ExampleStateInterface> = {
 			})
 		}
 
-  }
+  },
+
+	guardarConfiguracio (state: ExampleStateInterface, payload) {
+		state.configuracio.servidor = payload.servidor
+		state.configuracio.port = payload.port
+		state.configuracio.usuari = payload.usuari
+		state.configuracio.pwd = payload.pwd
+	}
+
 };
 
 export default mutation;

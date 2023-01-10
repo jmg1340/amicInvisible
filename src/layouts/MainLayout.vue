@@ -54,6 +54,12 @@ const opcions_menu = [
     caption: '... per grups',
     icon: 'groups',
     to: '/'
+  },
+  {
+    title: 'Configuració',
+    caption: 'Servidor, port, usuari i pwd',
+    icon: 'settings',
+    to: '/configuracio'
   }
 ];
 

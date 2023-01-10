@@ -1,4 +1,12 @@
 
+export interface	Configuracio {
+	servidor: string,
+	port: string,
+	usuari: string,
+	pwd: string
+}
+
+
 export interface Grup {
   id: number;
 	nom: string;

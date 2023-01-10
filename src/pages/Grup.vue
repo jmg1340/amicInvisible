@@ -1,11 +1,11 @@
 <template>
-	<div class="row  justify-center q-ma-lg">
+	<div class="row  justify-center q-ma-xs">
 		<q-card class="col">
 			<q-card-section>
 
-				<div class="row justify-between">
-					<div class="text-h5">Grup: <span class="text-grey-8">{{ nomGrup }} </span></div>
-					<q-btn dense label="Afegir" class="q-mb-md bg-primary text-white" noCaps @click="afegirParticipant"/>
+				<div class="row justify-end">
+					
+					<q-btn dense label="Afegir" class="q-mb-xs bg-primary text-white" noCaps @click="afegirParticipant"/>
 				</div>
 				
 				<div class="row text-white bg-grey-8">
@@ -31,7 +31,7 @@
 import { Participant, Participants } from '../components/models';
 import ParticipantDades from "../components/ParticipantDades.vue"
 import ParticipantEditarAfegir from "./ParticipantEditarAfegir.vue"
-import { defineComponent, computed, PropType } from "vue";
+import { defineComponent, computed } from "vue";
 
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';

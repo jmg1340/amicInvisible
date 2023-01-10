@@ -7,9 +7,14 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Index.vue') }],
   },
   {
+    path: '/configuracio',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Configuracio.vue') }],
+  },
+  {
     path: '/grup/:idGrup',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Grup.vue'), props: true }],
+    children: [{ path: '', component: () => import('pages/GrupSorteig.vue'), props: true }],
   },
 
   {
