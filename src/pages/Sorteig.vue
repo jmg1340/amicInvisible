@@ -48,9 +48,44 @@ export default defineComponent ({
 
 		
 		const sorteig = () => {
-			console.log("sorteig")
+			let pPendentsAssignar = participantsGrup.slice(0)
+			console.log("pPendentsAssignar", pPendentsAssignar)
+
+			let pAssignats: number[] = []
+
+			const assignarId  = (i: number) => {
+				// usuari de la posicio i
+				const idUsuari =pPendentsAssignar[i].id
+
+				// array dels participants a no tenir en compte (el idUsuari, excepcions del idUsuari i participants ja assignats)
+				const arrNoEnCompte = [
+					idUsuari,
+					...pPendentsAssignar[i].excepcions,
+					...pAssignats
+				]
+
+				console.log("arrNoEnCompte", arrNoEnCompte)
+
+
+
+				return 1
+			}
+			
+			participantsGrup.forEach ((p, i) => {
+				const idAssignat = assignarId(i)
+				
+				pAssignats.push(idAssignat)
+			})
+
+
+
 
 		}
+
+
+
+
+
 
 
 		return { sorteig }
