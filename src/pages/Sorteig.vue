@@ -47,35 +47,86 @@ export default defineComponent ({
 		const participantsGrup = computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
 
 		
+
+
+
 		const sorteig = () => {
-			let pPendentsAssignar = participantsGrup.slice(0)
-			console.log("pPendentsAssignar", pPendentsAssignar)
+			let arrIDsPendentsAssignar = participantsGrup.slice(0).map(p => p.id)
+			console.log("arrIDsPendentsAssignar", arrIDsPendentsAssignar)
 
 			let pAssignats: number[] = []
-
-			const assignarId  = (i: number) => {
-				// usuari de la posicio i
-				const idUsuari =pPendentsAssignar[i].id
-
-				// array dels participants a no tenir en compte (el idUsuari, excepcions del idUsuari i participants ja assignats)
-				const arrNoEnCompte = [
-					idUsuari,
-					...pPendentsAssignar[i].excepcions,
-					...pAssignats
-				]
-
-				console.log("arrNoEnCompte", arrNoEnCompte)
+			let resultatFinal: object [] = []
 
 
 
-				return 1
-			}
-			
+
+				const assignarId  = (i: number, lenArrPend: number) => {
+					// usuari de la posicio i
+					const idUsuari =arrIDsPendentsAssignar[i]
+	
+					// array dels participants a no tenir en compte (el idUsuari, excepcions del idUsuari i participants ja assignats)
+					const arrNoEnCompte = [
+						idUsuari,
+						...participantsGrup[i].excepcions,
+						...pAssignats
+					]
+	
+					console.log("arrNoEnCompte", arrNoEnCompte)
+	
+	
+					let idIndex: number = -1
+					
+					let idTrobat: boolean = false
+					while (! idTrobat){
+						const indexSortejat = generarPosicioRandom()
+	
+						// mirar si el id corresponent a index de arrIDsPendentsAssignar no esta a arrNoEnCompte
+						idIndex = arrIDsPendentsAssignar[indexSortejat]
+	
+						if (! arrIDsPendentsAssignar.includes(idIndex)) idTrobat = true
+						console.log("idTrobat", idTrobat)
+	
+					}
+	
+	
+	
+	
+					function generarPosicioRandom () {
+							const min = 0, max = lenArrPend
+	
+							// find diff
+							let difference = max - min;
+	
+							// generate random number 
+							let rand = Math.random();
+	
+							// multiply with difference 
+							rand = Math.floor( rand * difference);
+	
+							// add with min value 
+							rand = rand + min;
+	
+							return rand;
+					}
+	
+	
+	
+					return idIndex
+				}
+
+
+
 			participantsGrup.forEach ((p, i) => {
-				const idAssignat = assignarId(i)
-				
+				const idAssignat = assignarId(i, arrIDsPendentsAssignar.length)
 				pAssignats.push(idAssignat)
+
+				resultatFinal.push({ id: arrIDsPendentsAssignar.shift(), idAssignat})
 			})
+
+			console.log("resultatFinal", resultatFinal)
+
+
+
 
 
 
