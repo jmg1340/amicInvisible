@@ -1,12 +1,25 @@
 <template>
 	<div class="q-ma-md">
 
-		<div class="text-center">
-			<q-btn color="negative" label="Sorteig" noCaps @click="sorteig()"/>
+		<div class="row ">
+			<div class="col text-left">
+				<q-btn color="negative" label="Sorteig" noCaps @click="sorteig()"/>
+			</div>
+			<div class="col text-right">
+				<q-toggle
+					class="col"
+					v-model="participantsVisibles"
+					checked-icon="visibility"
+					color="green"
+					unchecked-icon="visibility_off"
+					label="Visible"
+					left-label
+				/>			
+			</div>
 		</div>
 
 
-		<div class="row">
+		<div class="row text-center text-bold text-h6 q-mb-sm">
 			<div class="col">
 				Participant
 			</div>
@@ -15,14 +28,17 @@
 			</div>
 		</div>
 
-		<div class="row"
-					v-for= "(obj, index) in participantsSortejats" :key="index"
+		<div class="row text-center q-pa-sm pintaRecuadre"
+		v-for= "(obj, index) in participantsSortejats" :key="index"
 		>
 			<div class="col">
 				{{obj.objParticipant.nom}}
 			</div>
-			<div class="col">
+			<div class="col" v-if="participantsVisibles">
 				{{obj.objAmicInvisible.nom}}
+			</div>
+			<div  class="col" v-if="!participantsVisibles">
+				--------
 			</div>
 		</div>
 
@@ -33,7 +49,7 @@
 
 <script lang="ts">
 
-import { defineComponent, Ref, ref, computed } from "vue";
+import { defineComponent, Ref, ref, computed, onMounted } from "vue";
 
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';
@@ -69,7 +85,14 @@ export default defineComponent ({
 		const participantsGrup = computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
 
 		const participantsSortejats : Ref<any> = ref([])
-
+		const participantsVisibles : Ref<boolean> = ref(false)
+		
+		onMounted( () => {
+			console.log("ON MOUNTED")
+			participantsSortejats.value = store.state.example.grups.find( (g) => g.id === grupId )?.ultimSorteig
+			// const g  = store.state.example.grups.find( (gr) => gr.id === grupId )
+			// console.log (g[0].)
+		})
 
 
 		const sorteig = () => {
@@ -111,6 +134,8 @@ export default defineComponent ({
 	
 				})
 	
+				// ====== REPETIR EL SORTEIG EN ELS SEGÜENTS CASOS ========
+
 				// pot ser que l'ultim id participant tingui com id Amic el valor "undefined". Si és així es pq el id pendent que queda per sortejar es justament el id del participant. En aquest cas s'ha de tornar a fer el sorteig.
 	
 				// Tambe hem de veure que dels IDs amics sortejats, a cap participant i hagi tocat una excepció. En aquest cas s'ha de repetir el sorteig.
@@ -118,12 +143,30 @@ export default defineComponent ({
 				const snHiHaExcepcions : boolean = ! participantsGrup.every ( (p, idx) => {
 						console.log("isArray(p.excepcions)", Array.isArray(p.excepcions))
 						let sn: boolean = ! p.excepcions.includes( pAssignats[idx] )
-						console.log("p.id:", p.id, "idAI", pAssignats[idx], "p.excepcions:", p.excepcions, "p.excepcions[0]", p.excepcions[0], "includes?", sn)
+						// console.log("p.id:", p.id, "idAI", pAssignats[idx], "p.excepcions:", p.excepcions, "p.excepcions[0]", p.excepcions[0], "includes?", sn)
 						return sn
 						})
 
+				
+				// obtencio de array de ids ultim sorteig
+				const arrIdsUltSort = participantsSortejats.value.map ( (obj: any) => obj.objAmicInvisible.id)
+				
 
-				if ( pAssignats[arrIDs.length - 1] === undefined || snHiHaExcepcions	){
+				// Si algun participant li ha tocat el mateix amic invisible de l'ultim sorteig, es repeteix el sorteig
+				// console.log("arrIdsUltSort" ,arrIdsUltSort, "pAssignats", pAssignats)
+				const snAmicInvRepe = () => {
+					for ( let index = 0; index < arrIDs.length; index++ ) {
+						// console.log(arrIdsUltSort[index], pAssignats[index])
+						if (arrIdsUltSort[index] == pAssignats[index]) return true
+					}
+					return false
+				}
+				// console.log( "snAmicInvRepe", snAmicInvRepe())
+
+
+
+
+				if ( pAssignats[arrIDs.length - 1] === undefined || snHiHaExcepcions  || snAmicInvRepe() ){
 					arrIDsPendentsAssignar = participantsGrup.slice(0).map(p => p.id)
 					pAssignats = []
 					tornarAFerSorteig = true
@@ -138,54 +181,58 @@ export default defineComponent ({
 			participantsSortejats.value = []
 			
 			for (const [index, name] of arrIDs.entries()) {
-				console.log( arrIDs[index], pAssignats[index])
-				let oParticipant = participantsGrup[index]
-				let oAmicInvisible = participantsGrup.find ( ai => ai.id === pAssignats[index] )
+				// console.log( arrIDs[index], pAssignats[index])
 				participantsSortejats.value.push({
-					objParticipant : oParticipant,
-					objAmicInvisible : oAmicInvisible
+					objParticipant : participantsGrup[index],
+					objAmicInvisible : participantsGrup.find ( ai => ai.id === pAssignats[index] )
 				})
 			}
 
 
+			// guardem aquest sorteig com a ultim sorteig d'aquest grup
+			store.commit("example/guardarSorteig", {
+				idGrup: grupId,
+				ultimSorteig: participantsSortejats.value
+			})
 
 
 
 
-
-			function generarPosicioRandom (lenArrPend: number) {
-					const min = 0, max = lenArrPend
-
-					// find diff
-					let difference = max - min;
-
-					// generate random number 
-					let rand = Math.random();
-
-					// multiply with difference 
-					rand = Math.floor( rand * difference);
-
-					// add with min value 
-					rand = rand + min;
-
-					return rand;
-			}
-
-
-		
-
-			return { participantsSortejats }
 
 
 		}
 
 
 
+		function generarPosicioRandom (lenArrPend: number) {
+				const min = 0, max = lenArrPend
+
+				// find diff
+				let difference = max - min;
+
+				// generate random number 
+				let rand = Math.random();
+
+				// multiply with difference 
+				rand = Math.floor( rand * difference);
+
+				// add with min value 
+				rand = rand + min;
+
+				return rand;
+		}
+
+	
 
 
 
 
-		return { sorteig, participantsSortejats }
+
+
+
+
+
+		return { sorteig, participantsSortejats, participantsVisibles }
 	}
 
 
@@ -201,5 +248,6 @@ export default defineComponent ({
 		border-left: 1px solid grey;
 		border-bottom: 1px solid grey;
 		border-right: 1px solid grey;
+		border-top: 1px solid grey;
 	}
 </style>

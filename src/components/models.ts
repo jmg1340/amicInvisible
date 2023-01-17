@@ -10,6 +10,7 @@ export interface	Configuracio {
 export interface Grup {
   id: number;
 	nom: string;
+	ultimSorteig: any[];
 }
 
 export interface Grups extends Array<Grup>{}

@@ -19,8 +19,8 @@ function state(): ExampleStateInterface {
 		},
 		
 		grups: [
-			{ id: 1, nom: "FAMILIA JORDI"},
-			{ id: 2, nom: "FAMILIA ANA"}
+			{ id: 1, nom: "FAMILIA JORDI", ultimSorteig: []},
+			{ id: 2, nom: "FAMILIA ANA", ultimSorteig: []}
 		],
 
 		participants: [

@@ -19,7 +19,7 @@ export default defineComponent({
 			const state2: any = $q.localStorage.getItem("estatAmicInvisible")
 
 			if ( state2 ) {
-				store.commit("example/carregarDadesDeLocalStorage", JSON.parse( state2)  )
+				store.commit("example/carregarDadesDeLocalStorage", JSON.parse( state2 )  )
 			}
 		})
 

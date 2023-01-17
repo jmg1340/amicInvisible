@@ -6,12 +6,13 @@ const mutation: MutationTree<ExampleStateInterface> = {
 	carregarDadesDeLocalStorage (state: ExampleStateInterface, payload) {
 		state.grups = payload.grups;
 		state.participants = payload.participants;
+		state.configuracio = payload.configuracio;
 	},
 
-	eliminarParticipant (state: ExampleStateInterface, payload) {
-		// ... busquem les dades (objecte) segons el id
-		state.participants = state.participants.filter( p => p.id !== parseInt(payload.idParticipant))
-	},
+
+
+
+	/* ****** GRUPS ******/
 
 	eliminarParticipantsGrup (state: ExampleStateInterface, payload) {
 		// ... busquem les dades (objecte) segons el id
@@ -39,10 +40,17 @@ const mutation: MutationTree<ExampleStateInterface> = {
 			state.grups.push({
 				id : payload.idGrup,
 				nom : payload.nom,
+				ultimSorteig: []
 			})
 		}
 	},
 
+
+
+
+
+
+	/* ****** PARTICIPANTS ******/
 
   guardarParticipant (state: ExampleStateInterface, payload) {
 		// console.log("payload", payload)
@@ -72,12 +80,42 @@ const mutation: MutationTree<ExampleStateInterface> = {
 
   },
 
+	eliminarParticipant (state: ExampleStateInterface, payload) {
+		// ... busquem les dades (objecte) segons el id
+		state.participants = state.participants.filter( p => p.id !== parseInt(payload.idParticipant))
+	},
+
+
+
+
+
+	/* ****** CONFIGURACIO ******/
 	guardarConfiguracio (state: ExampleStateInterface, payload) {
 		state.configuracio.servidor = payload.servidor
 		state.configuracio.port = payload.port
 		state.configuracio.usuari = payload.usuari
 		state.configuracio.pwd = payload.pwd
+	},
+	
+	
+	
+	
+		/* ****** SORTEIG ******/
+	guardarSorteig (state: ExampleStateInterface, payload) {
+		// ... busquem les dades (objecte) segons el id
+		const objGrup = state.grups.find( (g) => g.id === parseInt(payload.idGrup))
+		if (objGrup !== undefined)
+			objGrup.ultimSorteig = payload.ultimSorteig
+
 	}
+
+
+
+
+	
+
+
+
 
 };
 
