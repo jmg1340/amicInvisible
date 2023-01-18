@@ -6,25 +6,28 @@
 				<q-btn color="negative" label="Sorteig" noCaps @click="sorteig()"/>
 			</div>
 			<div class="col text-right">
-				<q-toggle
-					class="col"
-					v-model="participantsVisibles"
-					checked-icon="visibility"
-					color="green"
-					unchecked-icon="visibility_off"
-					label="Visible"
-					left-label
-				/>			
+
 			</div>
 		</div>
 
 
-		<div class="row text-center text-bold text-h6 q-mb-sm">
-			<div class="col">
+		<div class="row text-bold text-h6 q-mb-sm">
+			<div class="col text-center">
 				Participant
 			</div>
 			<div class="col">
-				Amic invisble
+				<div class="row justify-center items-center">
+					<div class="col-auto">Amic invisble</div>
+					<q-toggle
+						class="col-auto"
+						v-model="participantsVisibles"
+						checked-icon="visibility"
+						color="green"
+						unchecked-icon="visibility_off"
+					/>
+					<div class="col"></div>		
+				</div>
+
 			</div>
 		</div>
 
@@ -34,11 +37,22 @@
 			<div class="col">
 				{{obj.objParticipant.nom}}
 			</div>
-			<div class="col" v-if="participantsVisibles">
+			<div class="col" v-if="obj.visibilitat">
 				{{obj.objAmicInvisible.nom}}
 			</div>
-			<div  class="col" v-if="!participantsVisibles">
+			<div  class="col" v-if="!obj.visibilitat">
 				--------
+			</div>
+			<div class="col">
+					<q-toggle
+						class="col-auto"
+						v-model="obj.visibilitat"
+						checked-icon="visibility"
+						color="green"
+						unchecked-icon="visibility_off"
+						dense
+					/>			
+
 			</div>
 		</div>
 
@@ -82,14 +96,18 @@ export default defineComponent ({
 
 		
 		const grupId = parseInt(props.idGrup)
-		const participantsGrup = computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
+		const participantsGrup =  computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
 
 		const participantsSortejats : Ref<any> = ref([])
 		const participantsVisibles : Ref<boolean> = ref(false)
 		
 		onMounted( () => {
 			console.log("ON MOUNTED")
-			participantsSortejats.value = store.state.example.grups.find( (g) => g.id === grupId )?.ultimSorteig
+			participantsSortejats.value = JSON.parse( JSON.stringify(store.state.example.grups.find( (g) => g.id === grupId )?.ultimSorteig ))
+			console.log( "participantsSortejats.value", participantsSortejats.value)
+
+
+
 			// const g  = store.state.example.grups.find( (gr) => gr.id === grupId )
 			// console.log (g[0].)
 		})
@@ -101,8 +119,8 @@ export default defineComponent ({
 
 			// 1. Obtenim 2 arrays: un de Ids de tots els participants i un altre igual que servira per anar descomptant els Ids que ja han estat sortejats
 
-			const arrIDs = participantsGrup.map(p => p.id)
-			let arrIDsPendentsAssignar = participantsGrup.slice(0).map(p => p.id)
+			const arrIDs = participantsGrup.map((p: any) => p.id)
+			let arrIDsPendentsAssignar = participantsGrup.slice(0).map((p: any) => p.id)
 			// console.log("arrIDsPendentsAssignar", arrIDsPendentsAssignar)
 
 
@@ -116,12 +134,12 @@ export default defineComponent ({
 				tornarAFerSorteig = false
 				
 				// 3. Fem bucle per tots els ids participants i fem l'assignació segons sorteig
-				arrIDs.forEach ( (id, index) => {
+				arrIDs.forEach ( (id: any) => {
 	
 					// per cada id sortejem l'amic invisible. Aquest sorteig serà dels Ids pendents d'assignar (tb no es tindrà en compte el id del participant actual si encara esta en els pendents d'assignar)
 	
 					// array de Ids pendents sense id del participant actual.
-					const idsPendNoActual = arrIDsPendentsAssignar.filter( id2 => id2 !== id)
+					const idsPendNoActual = arrIDsPendentsAssignar.filter( (id2: any) => id2 !== id)
 	
 					// Procedim al sorteig.
 					const iDAmicInvisible: number = idsPendNoActual[generarPosicioRandom(idsPendNoActual.length)]
@@ -130,7 +148,7 @@ export default defineComponent ({
 					pAssignats.push(iDAmicInvisible)
 	
 					// i treiem id amic sortejat del array de ids pendents d'assignar
-					arrIDsPendentsAssignar = arrIDsPendentsAssignar.filter ( id => id !== iDAmicInvisible)
+					arrIDsPendentsAssignar = arrIDsPendentsAssignar.filter ( (id: any) => id !== iDAmicInvisible)
 	
 				})
 	
@@ -140,7 +158,7 @@ export default defineComponent ({
 	
 				// Tambe hem de veure que dels IDs amics sortejats, a cap participant i hagi tocat una excepció. En aquest cas s'ha de repetir el sorteig.
 
-				const snHiHaExcepcions : boolean = ! participantsGrup.every ( (p, idx) => {
+				const snHiHaExcepcions : boolean = ! participantsGrup.every ( (p: any, idx: any) => {
 						console.log("isArray(p.excepcions)", Array.isArray(p.excepcions))
 						let sn: boolean = ! p.excepcions.includes( pAssignats[idx] )
 						// console.log("p.id:", p.id, "idAI", pAssignats[idx], "p.excepcions:", p.excepcions, "p.excepcions[0]", p.excepcions[0], "includes?", sn)
@@ -167,7 +185,7 @@ export default defineComponent ({
 
 
 				if ( pAssignats[arrIDs.length - 1] === undefined || snHiHaExcepcions  || snAmicInvRepe() ){
-					arrIDsPendentsAssignar = participantsGrup.slice(0).map(p => p.id)
+					arrIDsPendentsAssignar = participantsGrup.slice(0).map( (p: any) => p.id)
 					pAssignats = []
 					tornarAFerSorteig = true
 				}
@@ -184,7 +202,8 @@ export default defineComponent ({
 				// console.log( arrIDs[index], pAssignats[index])
 				participantsSortejats.value.push({
 					objParticipant : participantsGrup[index],
-					objAmicInvisible : participantsGrup.find ( ai => ai.id === pAssignats[index] )
+					objAmicInvisible : participantsGrup.find ( (ai: any) => ai.id === pAssignats[index] ),
+					visibilitat: false
 				})
 			}
 
@@ -195,7 +214,7 @@ export default defineComponent ({
 				ultimSorteig: participantsSortejats.value
 			})
 
-
+			participantsSortejats.value = JSON.parse( JSON.stringify( participantsSortejats.value ))
 
 
 

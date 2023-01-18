@@ -59,6 +59,9 @@ export default defineComponent({
 			store.state.example.participants.find( (p) => p.idGrup === parseInt(props.idGrup) && p.id === parseInt(props.idPart))?.excepcions || []
 		)
 
+		console.log("EXCEPCIONS - arrExcepcions", arrExcepcions)
+
+
 		watch(() => arrExcepcions.value, (currentValue, oldValue) => {
 			// console.log("currentValue", currentValue);
 			// console.log("oldValue", oldValue);

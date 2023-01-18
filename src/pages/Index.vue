@@ -119,8 +119,7 @@ export default defineComponent({
     }
 
 
-		const mostrarGrup = (idGrup: number) => {
-			// console.log("parametre", router.push)
+		const mostrarGrup = (idGrup: string) => {
 			router.push(`/grup/${idGrup}`)
 		}
 

@@ -63,7 +63,8 @@ export default defineComponent ({
 
 		const store = useStore(storeKey)		
 
-		const grupId = parseInt(props.idGrup)
+		const grupId: number = parseInt(props.idGrup)
+		
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id === grupId ))?.nom
 
 		// const participants = store.state.example.participants
@@ -72,7 +73,7 @@ export default defineComponent ({
 
 		const afegirParticipant = () => { 
 			router.push({ name: "afegirEditarParticipant", query: { 
-				idGrup: grupId, 
+				idGrup: grupId,
 				mode: "afegir" 
 				} });
 		}

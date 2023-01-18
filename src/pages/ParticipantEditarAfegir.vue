@@ -72,36 +72,55 @@ export default defineComponent({
 
 		const store = useStore(storeKey)
 
-		const id = route.query.id
+		const mode = route.query.mode
+
+		let id: any
+		if ( mode === "afegir" ){
+			id = (Math.max( ...store.state.example.participants.map( p => p.id ) ) + 1).toString()
+		} else {
+			id = route.query.id
+		}
+
+		let arrExcepcions: number[] | undefined
 		
 		const idGrup = route.query.idGrup
+
 		const nom: Ref<any> = ref("")
 		const email: Ref<any> = ref("")
 	
-		console.log("typeof(id)", typeof(id))
-		console.log("typeof(idGrup)", typeof(idGrup))
+		// console.log("typeof(id)", typeof(id))
+		// console.log("typeof(idGrup)", typeof(idGrup))
 
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id == idGrup ))?.nom
 		console.log("GRUP nomGrup:", nomGrup)
-		let arrExcepcions = (store.state.example.participants.find( (p: any) => p.id == id ))?.excepcions
-		console.log("GRUP arrExcepcions:", arrExcepcions)
+		
 
 		onMounted(() => {
-			if ( route.query.mode === "editar" ){
-				nom.value = route.query.nom
-				email.value = route.query.email
+			if ( mode === "afegir" ){
+				// id = (Math.max( ...store.state.example.participants.map( p => p.id ) ) + 1).toString()
+				arrExcepcions = []
+			} else {
+				// id = route.query.id
+				nom.value = (store.state.example.participants.find( (p: any) => p.id == id ))?.nom
+				email.value = (store.state.example.participants.find( (p: any) => p.id == id ))?.email
+				arrExcepcions = (store.state.example.participants.find( (p: any) => p.id == id ))?.excepcions
 			}
+			console.log("ON MOUNTED - id", id)
+			console.log("ON MOUNTED - arrExcepcions:", arrExcepcions)
 		})
 
-		const onSubmit = () => {
-			console.log("onSubmit apretat. arrExcepcions:", arrExcepcions)
-			
-			if (! arrExcepcions ) (store.state.example.participants.find( (p: any) => p.id === id ))?.excepcions
 
-			store.dispatch( "example/guardarDadesParticipant", {
+
+
+
+		const onSubmit = () => {
+			
+			console.log("ON SUBMIT - arrExcepcions:", arrExcepcions)
+
+			store.commit("example/guardarParticipant", {
 				mode: route.query.mode, 
-				id: route.query.id,
-				idGrup: idGrup,
+				id: parseInt(id),
+				idGrup: (typeof( idGrup ) === "string") ? parseInt(idGrup) : null, 
 				nom: nom.value, 
 				email: email.value,
 				excepcions: arrExcepcions
@@ -115,19 +134,13 @@ export default defineComponent({
 			router.push(`/grup/${idGrup}`)
 		}
 
-		// watch(
-		// 	() => props.objAfegirEditar,
-		// 	(first, second) => {
-		// 		console.log("props.objAfegirEditar ha canviat", second)
-		// 	}
-		// )
 
 		const alCanviarArrExcepcions = (nouArrE: any) => {
 			arrExcepcions = nouArrE
 			// console.log("nouArrE", arrExcepcions)
 		}
 
-		return { nomGrup, nom, id, idGrup, email, onSubmit, onCancelar, alCanviarArrExcepcions, arrExcepcions}
+		return { nomGrup, nom, id, idGrup, email, arrExcepcions, onSubmit, onCancelar, alCanviarArrExcepcions}
 	}
 })
 </script>

@@ -53,20 +53,21 @@ const mutation: MutationTree<ExampleStateInterface> = {
 	/* ****** PARTICIPANTS ******/
 
   guardarParticipant (state: ExampleStateInterface, payload) {
-		// console.log("payload", payload)
+		console.log("payload a MUTATION", payload)
 		
-		// ... busquem les dades (objecte) segons el id
-		const obj = state.participants.find( (p) => p.id === parseInt(payload.id))
+		if ( payload.mode === "editar" ) {
+			
+			// ... busquem les dades (objecte) segons el id
+			const obj: any = state.participants.find( (p) => p.id === parseInt(payload.id))
 
-		
-		if ( obj !== undefined ) {
 			// ... modifiquem les dades
 			obj.id = payload.id;
 			obj.idGrup = payload.idGrup;
 			obj.nom = payload.nom;
 			obj.email = payload.email;
 			obj.excepcions = payload.excepcions;
-		} else {
+
+		} else if ( payload.mode = "afegir") {
 			// ... afegim nou participant
 			console.log("Participant NO TROBAT. Es tracta d'un nou participant")
 			state.participants.push({
