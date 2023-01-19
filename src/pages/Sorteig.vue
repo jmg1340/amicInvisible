@@ -1,12 +1,12 @@
 <template>
 	<div class="q-ma-md">
 
-		<div class="row ">
+		<div class="row items-center">
 			<div class="col text-left">
 				<q-btn color="negative" label="Sorteig" noCaps @click="sorteig()"/>
 			</div>
 			<div class="col text-right">
-
+				<q-btn icon="mail" type="push" dense rounded size="xl"/>
 			</div>
 		</div>
 
@@ -17,21 +17,22 @@
 			</div>
 			<div class="col">
 				<div class="row justify-center items-center">
-					<div class="col-auto">Amic invisble</div>
+					<div class="col-auto">Amic invisible</div>
 					<q-toggle
 						class="col-auto"
 						v-model="participantsVisibles"
 						checked-icon="visibility"
 						color="green"
 						unchecked-icon="visibility_off"
+						toggle-order="ft"
 					/>
-					<div class="col"></div>		
+					<div class="col-auto">&nbsp;</div>		
 				</div>
 
 			</div>
 		</div>
 
-		<div class="row text-center q-pa-sm pintaRecuadre"
+		<div class="row items-center text-center q-pa-sm pintaRecuadre"
 		v-for= "(obj, index) in participantsSortejats" :key="index"
 		>
 			<div class="col">
@@ -43,7 +44,7 @@
 			<div  class="col" v-if="!obj.visibilitat">
 				--------
 			</div>
-			<div class="col">
+			<div class="col-auto">
 					<q-toggle
 						class="col-auto"
 						v-model="obj.visibilitat"
@@ -52,7 +53,7 @@
 						unchecked-icon="visibility_off"
 						dense
 					/>			
-
+				<q-btn class="col q-ml-sm" icon="mail" dense flat rounded />
 			</div>
 		</div>
 
@@ -63,7 +64,7 @@
 
 <script lang="ts">
 
-import { defineComponent, Ref, ref, computed, onMounted } from "vue";
+import { defineComponent, Ref, ref, computed, onMounted, watch } from "vue";
 
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';
@@ -99,18 +100,49 @@ export default defineComponent ({
 		const participantsGrup =  computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
 
 		const participantsSortejats : Ref<any> = ref([])
-		const participantsVisibles : Ref<boolean> = ref(false)
+		const participantsVisibles : Ref<boolean | null> = ref(false)
 		
 		onMounted( () => {
 			console.log("ON MOUNTED")
 			participantsSortejats.value = JSON.parse( JSON.stringify(store.state.example.grups.find( (g) => g.id === grupId )?.ultimSorteig ))
 			console.log( "participantsSortejats.value", participantsSortejats.value)
 
+			participantsSortejats.value.forEach ( (o: any) => o.visibilitat = participantsVisibles.value)
 
+			watch ( participantsSortejats.value, (currentValue, oldValue)=> {
+				const totsVisibles = currentValue.every ( (obj: any) => obj.visibilitat === true )
+				const totsInvisibles = currentValue.every ( (obj: any) => obj.visibilitat === false )
 
-			// const g  = store.state.example.grups.find( (gr) => gr.id === grupId )
-			// console.log (g[0].)
+				console.log("totsInvisibles", totsInvisibles, "totsVisibles", totsVisibles)
+
+				if ( totsVisibles ) {
+					participantsVisibles.value = true
+				} else if ( totsInvisibles ) {
+					participantsVisibles.value = false
+				} else {
+					participantsVisibles.value = null
+				}
+
+			},{ deep: true })
+
 		})
+
+
+
+		watch ( participantsVisibles , (currentValue, oldValue)=> {
+			if ( participantsVisibles.value === true ) {
+				participantsSortejats.value.forEach ( (o: any) => o.visibilitat = true)
+			}
+			if ( participantsVisibles.value === false ) {
+				participantsSortejats.value.forEach ( (o: any) => o.visibilitat = false)
+			}
+		})
+
+
+
+
+
+
 
 
 		const sorteig = () => {
@@ -203,7 +235,7 @@ export default defineComponent ({
 				participantsSortejats.value.push({
 					objParticipant : participantsGrup[index],
 					objAmicInvisible : participantsGrup.find ( (ai: any) => ai.id === pAssignats[index] ),
-					visibilitat: false
+					visibilitat: participantsVisibles.value
 				})
 			}
 
@@ -216,7 +248,7 @@ export default defineComponent ({
 
 			participantsSortejats.value = JSON.parse( JSON.stringify( participantsSortejats.value ))
 
-
+			// participantsVisibles.value = false
 
 
 		}

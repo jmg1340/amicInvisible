@@ -25,8 +25,8 @@ export default defineComponent({
 
 
 		const stateParticipants = computed ( () => store.state.example)
-
 		console.log("APP VUE: abans de watch:", stateParticipants.value)
+
 		watch ( stateParticipants.value , (currentValue, oldValue) => {
 			console.log("APP.VUE CurrentValue:", currentValue)
 
