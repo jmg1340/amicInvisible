@@ -16,7 +16,7 @@
 							<q-btn flat dense round color="negative" icon="delete" @click="eliminarGrup(obj.id, obj.nom)"/>
 						</div>
 					</q-item-section>
-					
+
 				</q-item>
 			</q-list>
 
@@ -100,9 +100,10 @@ export default defineComponent({
 				console.log('>>>> OK, received', data)
 				if (data.trim().length > 0) {
 
-					if (mode === "afegir")
-						idGrup = Math.max( ...store.state.example.grups.map( g => g.id ) ) + 1
-
+					if (mode === "afegir"){
+            const propostaIdGrup: any = Math.max( ...store.state.example.grups.map( g => g.id ))
+						idGrup = ( propostaIdGrup === -Infinity ? 0 : propostaIdGrup )+ 1
+          }
 
 					store.commit("example/guardarGrup", {
 						idGrup: idGrup,

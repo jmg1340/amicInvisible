@@ -1,5 +1,5 @@
 <template>
-	
+
 	<q-card class="q-ma-lg">
 		<q-card-section class="text-center text-h6">
 			{{ nomGrup }}
@@ -7,7 +7,7 @@
 		<q-card-section>
 			<q-form
 				@submit="onSubmit"
-				
+
 				class="q-gutter-md"
 			>
 				<q-input
@@ -37,9 +37,9 @@
 					</div>
 					<div class="col">
 						<div class="column items-center">
-							<div class="col">Correu de prova</div> 
+							<div class="col">Correu de prova</div>
 							<div class="col-auto">
-								<q-btn class="col q-ml-sm" icon="mail" dense flat rounded @click="enviarCorreuProva()"/>	
+								<q-btn class="col q-ml-sm" icon="mail" dense flat rounded @click="enviarCorreuProva()"/>
 							</div>
 						</div>
 					</div>
@@ -47,7 +47,7 @@
 
 
 
-				
+
 
 
 
@@ -67,7 +67,7 @@
 
 
 
-	
+
 </template>
 
 <script lang="ts">
@@ -93,24 +93,25 @@ export default defineComponent({
 
 		let id: any
 		if ( mode === "afegir" ){
-			id = (Math.max( ...store.state.example.participants.map( p => p.id ) ) + 1).toString()
+      const propostaId: any = Math.max( ...store.state.example.participants.map( p => p.id ))
+			id = (( propostaId === -Infinity ? 0 : propostaId ) + 1).toString()
 		} else {
 			id = route.query.id
 		}
 
 		let arrExcepcions: number[] | undefined
-		
+
 		const idGrup = route.query.idGrup
 
 		const nom: Ref<any> = ref("")
 		const email: Ref<any> = ref("")
-	
+
 		// console.log("typeof(id)", typeof(id))
 		// console.log("typeof(idGrup)", typeof(idGrup))
 
 		const nomGrup = (store.state.example.grups.find( (g: any) => g.id == idGrup ))?.nom
 		console.log("GRUP nomGrup:", nomGrup)
-		
+
 
 		onMounted(() => {
 			if ( mode === "afegir" ){
@@ -131,14 +132,14 @@ export default defineComponent({
 
 
 		const onSubmit = () => {
-			
+
 			console.log("ON SUBMIT - arrExcepcions:", arrExcepcions)
 
 			store.commit("example/guardarParticipant", {
-				mode: route.query.mode, 
+				mode: route.query.mode,
 				id: parseInt(id),
-				idGrup: (typeof( idGrup ) === "string") ? parseInt(idGrup) : null, 
-				nom: nom.value, 
+				idGrup: (typeof( idGrup ) === "string") ? parseInt(idGrup) : null,
+				nom: nom.value,
 				email: email.value,
 				excepcions: arrExcepcions
 				} )
@@ -169,7 +170,7 @@ export default defineComponent({
 				%0D%0A
 				%0D%0A
 			`
-			window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;			
+			window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
 		}
 
 
