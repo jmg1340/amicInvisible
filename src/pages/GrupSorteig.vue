@@ -1,5 +1,5 @@
 <template>
-	<div class="q-ma-md">
+	<div class="q-ma-xs">
 
 				<div class="text-h6 text-center">Grup: <span class="text-grey-8">{{ nomGrup }} </span></div>
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="row  justify-center q-ma-xs">
+	<div class="row  justify-center ">
 		<q-card class="col">
 			<q-card-section>
 

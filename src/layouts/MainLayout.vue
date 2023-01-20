@@ -50,17 +50,17 @@ import MenuItem from 'src/components/Menu_Item.vue'
 
 const opcions_menu = [
   {
-    title: 'Participants',
-    caption: '... per grups',
+    title: 'Grups',
+    caption: 'grups de participants',
     icon: 'groups',
     to: '/'
   },
-  {
-    title: 'Configuració',
-    caption: 'Servidor, port, usuari i pwd',
-    icon: 'settings',
-    to: '/configuracio'
-  }
+  // {
+  //   title: 'Configuració',
+  //   caption: 'Servidor, port, usuari i pwd',
+  //   icon: 'settings',
+  //   to: '/configuracio'
+  // }
 ];
 
 import { defineComponent, ref } from 'vue'

@@ -1,7 +1,7 @@
 <template>
 	
 	<q-card class="q-ma-lg">
-		<q-card-section>
+		<q-card-section class="text-center text-h6">
 			{{ nomGrup }}
 		</q-card-section>
 		<q-card-section>
@@ -19,23 +19,40 @@
 					:rules="[ val => val && val.length > 0 || 'No pot estar buit']"
 				/>
 
-				<q-input
-					filled
-					type="string"
-					v-model="email"
-					label="Email"
-					lazy-rules
-					:rules="[
-						val => val.includes('@') || 'Format incorrecte',
-						val => val.includes('.') || 'Format incorrecte',
-					]"
-				/>
 
+				<div class="row">
+					<div class="col-8">
+						<q-input
+							filled
+							type="string"
+							v-model="email"
+							label="Email"
+							lazy-rules
+							:rules="[
+								val => val.includes('@') || 'Format incorrecte',
+								val => val.includes('.') || 'Format incorrecte',
+							]"
+						/>
+
+					</div>
+					<div class="col">
+						<div class="column items-center">
+							<div class="col">Correu de prova</div> 
+							<div class="col-auto">
+								<q-btn class="col q-ml-sm" icon="mail" dense flat rounded @click="enviarCorreuProva()"/>	
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				
 
 
 
 				<div>
-					EXCECPIONS
+					No vull que em toqui mai:
 				</div>
 				<excepcions :idGrup="idGrup" :idPart="id" @onChangeArrExcepcions="alCanviarArrExcepcions"/>
 
@@ -140,7 +157,23 @@ export default defineComponent({
 			// console.log("nouArrE", arrExcepcions)
 		}
 
-		return { nomGrup, nom, id, idGrup, email, arrExcepcions, onSubmit, onCancelar, alCanviarArrExcepcions}
+
+		const enviarCorreuProva = () => {
+			const to = email.value
+			const subject = "AMIC INVISIBLE: verificacio comtpe de correu"
+			const body = `
+				Hola %0D%0A
+				Pots contestar aquest correu confirmant que l'has rebut? %0D%0A
+				%0D%0A
+				Merci! %0D%0A
+				%0D%0A
+				%0D%0A
+			`
+			window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;			
+		}
+
+
+		return { nomGrup, nom, id, idGrup, email, arrExcepcions, onSubmit, onCancelar, alCanviarArrExcepcions, enviarCorreuProva}
 	}
 })
 </script>

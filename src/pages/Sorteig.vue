@@ -1,13 +1,13 @@
 <template>
-	<div class="q-ma-md">
+	<div class="q-ma-sm">
 
-		<div class="row items-center">
-			<div class="col text-left">
-				<q-btn color="negative" label="Sorteig" noCaps @click="sorteig()"/>
+		<div class="row items-center q-mb-md">
+			<div class="col text-center">
+				<q-btn color="negative" label="Sorteig" noCaps @click="confirmaSorteig()"/>
 			</div>
-			<div class="col text-right">
-				<q-btn icon="mail" type="push" dense rounded size="xl"/>
-			</div>
+			<!-- <div class="col text-right"> -->
+				<!-- <q-btn icon="mail" type="push" dense rounded size="xl" @click="enviarATots()"/> -->
+			<!-- </div> -->
 		</div>
 
 
@@ -53,7 +53,7 @@
 						unchecked-icon="visibility_off"
 						dense
 					/>			
-				<q-btn class="col q-ml-sm" icon="mail" dense flat rounded />
+				<q-btn class="col q-ml-sm" icon="mail" dense flat rounded @click="enviarAmic(obj)"/>
 			</div>
 		</div>
 
@@ -71,7 +71,6 @@ import { useRouter } from 'vue-router';
 
 import { useStore } from 'vuex'
 import { storeKey } from '../store/index'
-
 
 
 export default defineComponent ({
@@ -97,6 +96,9 @@ export default defineComponent ({
 
 		
 		const grupId = parseInt(props.idGrup)
+		const nomGrup = computed((): any => store.state.example.grups.find( (g) => g.id === grupId)).value.nom
+		console.log("nomGrup:", nomGrup)
+
 		const participantsGrup =  computed(() => store.state.example.participants.filter( (p) => p.idGrup === grupId)).value
 
 		const participantsSortejats : Ref<any> = ref([])
@@ -139,7 +141,63 @@ export default defineComponent ({
 		})
 
 
+		const enviarAmic = ( o: any ) => {
+			console.log("enviar a tots")
+			// console.log(store.state.example.configuracio.usuari)
+			// console.log(store.state.example.configuracio.pwd)
 
+			const to = o.objParticipant.email
+			const subject = "AMIC INVISIBLE (" + nomGrup + ")"
+			const body = `
+				El teu amic invisible esta més abaix
+				%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A 
+				%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A 
+				%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A%0D%0A %0D%0A %0D%0A %0D%0A %0D%0A %0D%0A 
+				Amic invisible: ${o.objAmicInvisible.nom.toUpperCase()}
+				%0D%0A %0D%0A
+			`
+
+			// const bodyEncoded = window.btoa(unescape(encodeURIComponent(body)));
+			// const bodyDecoded = decodeURIComponent(escape(window.atob(bodyEncoded)));
+
+			// console.log("bodyEncoded", bodyEncoded)
+			// console.log("bodyDecoded", bodyDecoded)
+			
+
+			window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+		}
+
+
+
+		const confirmaSorteig = () => {
+      $q.dialog({
+        title: 'Confirmar',
+        message: `ATENCIÓ. Un nou sorteig, matxacarà les dades guardades de l'últim sorteig. Endavant?`,
+        ok: {
+          push: true,
+					color: "positive",
+					label: "Sí"
+        },
+        cancel: {
+          push: true,
+          color: 'negative',
+					label: "No"
+        },
+        persistent: true
+      }).onOk(() => {
+        // Hem d'eliminar el grup i els participants del grup
+				sorteig()
+
+      }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+
+		}
 
 
 
@@ -283,7 +341,7 @@ export default defineComponent ({
 
 
 
-		return { sorteig, participantsSortejats, participantsVisibles }
+		return { confirmaSorteig, participantsSortejats, participantsVisibles, enviarAmic, nomGrup }
 	}
 
 

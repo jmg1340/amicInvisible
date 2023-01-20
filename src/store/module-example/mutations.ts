@@ -84,6 +84,11 @@ const mutation: MutationTree<ExampleStateInterface> = {
 	eliminarParticipant (state: ExampleStateInterface, payload) {
 		// ... busquem les dades (objecte) segons el id
 		state.participants = state.participants.filter( p => p.id !== parseInt(payload.idParticipant))
+
+		// eliminacio del participant de les excepcions dels altres participants
+		state.participants.forEach ( p => {
+			p.excepcions = p.excepcions.filter ( idExcepcio => idExcepcio !== payload.idParticipant)
+		})
 	},
 
 

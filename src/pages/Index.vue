@@ -1,7 +1,7 @@
 <template>
   <div class="row items-center justify-center q-pa-lg">
 
-		<div class="col-6">
+		<div class="col-10">
 
 			<q-btn label="Nou grup" noCaps color="negative" class="q-mb-lg" @click="afegirModificarGrup('afegir', 0, '')"/>
 
