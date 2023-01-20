@@ -19,39 +19,39 @@ function state(): ExampleStateInterface {
 		},
 		
 		grups: [
-			{ id: 1, nom: "FAMILIA JORDI", ultimSorteig: []},
-			{ id: 2, nom: "FAMILIA ANA", ultimSorteig: []}
+			// { id: 1, nom: "FAMILIA JORDI", ultimSorteig: []},
+			// { id: 2, nom: "FAMILIA ANA", ultimSorteig: []}
 		],
 
 		participants: [
-			{
-				id: 10,
-				nom: "jordi2",
-				email: "jordi.miserachs@gmail.com",
-				idGrup: 1,
-				excepcions: []
-			},
-			{
-				id: 11,
-				nom: "Mariona2",
-				email: "exempleMariona@gmail.com",
-				idGrup: 1,
-				excepcions: []
-			},
-			{
-				id: 12,
-				nom: "Rosa M.2",
-				email: "exempleRosaM@gmail.com",
-				idGrup: 1,
-				excepcions: []
-			},
-			{
-				id: 13,
-				nom: "Ricard2",
-				email: "exempleRicard@gmail.com",
-				idGrup: 2,
-				excepcions: []
-			},
+			// {
+			// 	id: 10,
+			// 	nom: "jordi2",
+			// 	email: "jordi.miserachs@gmail.com",
+			// 	idGrup: 1,
+			// 	excepcions: []
+			// },
+			// {
+			// 	id: 11,
+			// 	nom: "Mariona2",
+			// 	email: "exempleMariona@gmail.com",
+			// 	idGrup: 1,
+			// 	excepcions: []
+			// },
+			// {
+			// 	id: 12,
+			// 	nom: "Rosa M.2",
+			// 	email: "exempleRosaM@gmail.com",
+			// 	idGrup: 1,
+			// 	excepcions: []
+			// },
+			// {
+			// 	id: 13,
+			// 	nom: "Ricard2",
+			// 	email: "exempleRicard@gmail.com",
+			// 	idGrup: 2,
+			// 	excepcions: []
+			// },
 		],
 
 
